@@ -82,7 +82,7 @@ export const serve = async (event: APIGatewayEvent, _context: Context): Promise<
       let params = {
         Destination: { /* required */
           ToAddresses: [
-            "pjfontillas@gmail.com",
+            email,
           ]
         },
         Message: { /* required */
