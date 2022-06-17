@@ -7,7 +7,7 @@ I started this challenge reviewing the details and requirements, identifying the
 - Send email via **SES**. I had already verified my `pjfontillas.com` domain with other projects so I'm using that for this challenge.
 
 Then I hit the first stumbling block: Serverless framework for **Infrastructure as Code**. I'll be honest, I already had experience with CI/CD and serverless, but
-not specifically using serverless.com as the delivery method. I thought about what I already knew how to do and searched for parallels in serverless.com. [skip to parallels](#mardown-header-but)
+not specifically using serverless.com as the delivery method. I thought about what I already knew how to do and searched for parallels in serverless.com. [skip to section](https://github.com/pjfontillas/thoughtful-automation#but)
 
 And then I found this: [serverless-react-boilerplate](https://github.com/arabold/serverless-react-boilerplate).
 Reading through its entirety I realized it was a good starting point and that I could expand upon it.
