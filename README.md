@@ -1,5 +1,7 @@
 # Full Stack Challenge - Serverless AWS App
-https://thoughtfulautomation.notion.site/Full-Stack-Challenge-Serverless-AWS-App-c73f346b134948f1a578845fe4ab8ac0
+[Challenge Description](https://thoughtfulautomation.notion.site/Full-Stack-Challenge-Serverless-AWS-App-c73f346b134948f1a578845fe4ab8ac0)
+
+[Take me to the implementation](https://ta.lucis.works/)
 
 I started this challenge reviewing the details and requirements, identifying the parts I found interesting. I immediately began with what I knew:
 - Frontend via **React**
