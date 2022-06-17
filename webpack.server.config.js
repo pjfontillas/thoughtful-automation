@@ -40,6 +40,9 @@ module.exports = {
     // TsconfigPathsPlugin applies the path aliases defined in `.tsconfig.json`
     plugins: [new TsconfigPathsPlugin()],
     extensions: [".server.tsx", ".server.ts", ".server.jsx", ".server.js", ".tsx", ".ts", ".jsx", ".js"],
+    alias: {
+      'pg-native': 'no-pg-native.js',
+    }
   },
   output: {
     libraryTarget: "commonjs2",

@@ -1,5 +1,5 @@
 ---
-service: serverless-react-boilerplate
+service: serverless-thoughtful-automation
 frameworkVersion: "3"
 useDotenv: true
 variablesResolutionMode: 20210326
@@ -36,11 +36,82 @@ provider:
           - .amazonaws.com/
           - ${self:provider.stage}
 
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - "ses:SendEmail"
+            - "ses:SendRawEmail"
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - apigateway:POST
+          Resource: !Sub arn:aws:apigateway:${AWS::Region}::/domainnames
+        - Effect: Allow
+          Action:
+            - apigateway:GET
+            - apigateway:DELETE
+          Resource: !Sub arn:aws:apigateway:${AWS::Region}::/domainnames/*
+        - Effect: Allow
+          Action:
+            - apigateway:PATCH
+            - apigateway:POST
+          Resource:
+            - !Sub arn:aws:apigateway:${AWS::Region}::/domainnames/*/basepathmappings
+            - !Sub arn:aws:apigateway:${AWS::Region}::/domainnames/*/basepathmappings/*
+        - Effect: Allow
+          Action:
+            - cloudfront:UpdateDistribution
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - route53:ListHostedZones
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - acm:ListCertificates
+          Resource: '*'
+        # - Effect: Allow
+        #   Action:
+        #     - route53:ChangeResourceRecordSets
+        #     - route53:GetHostedZone
+        #     - route53:ListResourceRecordSets
+        #   Resource: !Sub arn:aws:route53:::hostedzone/${HostedZoneId}
+        - Effect: Allow
+          Action:
+            - iam:CreateServiceLinkedRole
+          Resource:
+            - !Sub arn:aws:iam::${AWS::AccountId}:role/aws-service-role/ops.apigateway.amazonaws.com/AWSServiceRoleForAPIGateway
+        - Effect: Allow
+          Action:
+            - "secretsmanager:*"
+          Resource: "*"
+        - Effect: Allow
+          Action:
+           - "rds:*"
+           - "cloudwatch:DescribeAlarms"
+           - "cloudwatch:GetMetricStatistics"
+           - "ec2:CreateNetworkInterface"
+           - "ec2:DescribeNetworkInterfaces"
+           - "ec2:DeleteNetworkInterface"
+           - "ec2:DescribeAccountAttributes"
+           - "ec2:DescribeAvailabilityZones"
+           - "ec2:DescribeSecurityGroups"
+           - "ec2:DescribeSubnets"
+           - "ec2:DescribeVpcs"
+           - "sns:ListSubscriptions"
+           - "sns:ListTopics"
+           - "logs:DescribeLogStreams"
+           - "logs:GetLogEvents"
+          Resource: "*"
+
 plugins:
   - serverless-webpack
   - serverless-plugin-scripts
   - serverless-offline
   - serverless-s3-deploy
+  - serverless-domain-manager
 
 functions:
   serve:
@@ -52,11 +123,33 @@ functions:
           method: any
           cors: true
       - http:
+          path: /email/{email}
+          method: POST
+          cors: true
+      - http:
+          path: /verify/{token}/email/{email}
+          method: GET
+          cors: true
+      - http:
           path: /{any+}
           method: any
           cors: true
 
+
 custom:
+  bundle:
+    ignorePackages:
+      - 'pg-native'
+  customDomain:
+    domainName: ta.lucis.works
+    stage: ${self:provider.stage}
+    certificateName: '*.lucis.works'
+    createRoute53Record: true
+    createRoute53IPv6Record: true
+    endpointType: 'regional'
+    securityPolicy: tls_1_2
+    # apiType: rest
+    # autoDomain: false
   distBucketUrl:
     us-east-1:
       # us-east-1 uses a different URL format than the other regions
@@ -130,6 +223,7 @@ resources:
                       - .execute-api.
                       - Ref: AWS::Region
                       - .amazonaws.com
+                - "*"
               MaxAge: 3000
 
   Outputs:
