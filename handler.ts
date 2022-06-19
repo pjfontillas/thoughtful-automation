@@ -58,6 +58,17 @@ export const serve = async (event: APIGatewayEvent, _context: Context): Promise<
 
       // get email from path
       const email = decodeURIComponent(getBodyData(event, 'email'))
+      const domain = email.split('@')[1]
+      const whitelist = ["thoughtfulautomation", "pjfontillas.com"]
+        if (!whitelist.includes(domain)) {
+        return {
+          statusCode: 400,
+          headers: {
+            "Content-Type": "text/plain",
+          },
+          body: `${domain} not in whitelist.`,
+        }
+      }
 
       // save token to email in DB
       const rds_config = await getSecrets('RDS')
@@ -83,6 +94,7 @@ export const serve = async (event: APIGatewayEvent, _context: Context): Promise<
         Destination: { /* required */
           ToAddresses: [
             email,
+
           ]
         },
         Message: { /* required */
