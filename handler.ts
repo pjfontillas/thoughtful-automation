@@ -94,7 +94,6 @@ export const serve = async (event: APIGatewayEvent, _context: Context): Promise<
         Destination: { /* required */
           ToAddresses: [
             email,
-
           ]
         },
         Message: { /* required */
